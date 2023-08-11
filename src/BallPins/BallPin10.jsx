@@ -1,5 +1,5 @@
 import BallPin from "./BallPin01";
-import NormalBlock from "../../Blocks/NormalBlock.jsx";
+import NormalBlock from "../Blocks/NormalBlock.jsx";
 import BallPins6 from "./BallPins06";
 
 export default function BallPins10({ position = [0, 0, 0] }) {

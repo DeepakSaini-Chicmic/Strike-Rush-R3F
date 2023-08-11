@@ -4,11 +4,11 @@ import { RigidBody } from "@react-three/rapier";
 import { useEffect, useRef } from "react";
 import NormalBlock from "../Blocks/NormalBlock";
 
-export default function OneSideKnife({ position, rotation = [0, 0, 0] }) {
-  const knifeRef = useRef();
-  const knife = useFBX("./models/Obstacle/LiverKnife.fbx");
-  const animations = knife.animations;
-  const { actions, mixer } = useAnimations(animations, knifeRef);
+export default function TwoSideHammer({ position }) {
+  const hammer = useFBX("./models/Obstacle/BothSideHammer.fbx");
+  const hammerRef = useRef();
+  const animations = hammer.animations;
+  const { actions, mixer } = useAnimations(animations, hammerRef);
   useEffect(() => {
     actions.obstacles.play();
     actions.obstacles.timeScale = 0.3 + Math.random();
@@ -17,17 +17,20 @@ export default function OneSideKnife({ position, rotation = [0, 0, 0] }) {
     const deltaTime = delta;
     mixer.update(deltaTime);
   });
-  knife.traverse((child) => {
+  hammer.traverse((child) => {
     if (child.isMesh) {
       child.castShadow = true;
-      console.log("shadow");
     }
   });
   return (
     <>
-      <group position={position} rotation={rotation}>
-        <RigidBody type="fixed" colliders="hull" position={[-2.7, 1.6, 0]}>
-          <primitive ref={knifeRef} object={knife.clone()} scale={0.005} />
+      <group position={position}>
+        <RigidBody
+          type="kinematicPosition"
+          colliders="hull"
+          position={[0, 0.7, 0]}
+        >
+          <primitive ref={hammerRef} object={hammer.clone()} scale={0.005} />
         </RigidBody>
         <NormalBlock position={[0, 0, 0]} />
       </group>

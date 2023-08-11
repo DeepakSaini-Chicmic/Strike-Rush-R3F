@@ -1,29 +1,49 @@
 import NormalBlock from "./Blocks/NormalBlock.jsx";
-import TwoSideHammer from "./Obstacles/TwoSideHammer.jsx";
-import OneSideKnife from "./Obstacles/OneSideKnife.jsx";
-import OneSideHammer from "./Obstacles/OneSideHammer.jsx";
-import BallPins10 from "./Obstacles/BallPins/BallPin10.jsx";
+import TwoSideHammer from "./MovableObjects/TwoSideHammer.jsx";
+import OneSideKnife from "./MovableObjects/OneSideKnife.jsx";
+import OneSideHammer from "./MovableObjects/OneSideHammer.jsx";
+import BallPins10 from "./BallPins/BallPin10.jsx";
 import EndBlock from "./Blocks/EndBlock.jsx";
-import BallPins6 from "./Obstacles/BallPins/BallPins06.jsx";
-import BallPins3 from "./Obstacles/BallPins/BallPin03.jsx";
+import BallPins6 from "./BallPins/BallPins06.jsx";
+import BallPins3 from "./BallPins/BallPin03.jsx";
 import Ball from "./Ball.jsx";
-import UpDownRamp from "./UpDownRamp";
-export default function Level() {
+import UpDownRamp from "./Ramp/UpDownRamp.jsx";
+import { useMemo } from "react";
+import Gems4X4 from "./Collectibles/Gems4X4.jsx";
+import WinBox from "./Winboxes/WinBox.jsx";
+export default function Level({
+  count = 10,
+  types = [
+    TwoSideHammer,
+    OneSideKnife,
+    OneSideHammer,
+    BallPins6,
+    NormalBlock,
+    Gems4X4,
+  ],
+  seed = 0,
+}) {
+  const blocks = useMemo(() => {
+    const blocks = [];
+    for (let i = 0; i < count; i++) {
+      const type = types[Math.floor(Math.random() * types.length)];
+      blocks.push(type);
+    }
+    return blocks;
+  }, [count, types, seed]);
   return (
     <>
+      <Ball position={[0, 2, 0]} />
       <group>
         <NormalBlock position={[0, -0.5, 0]} />
-        <Ball position={[0, 2, 0]} />
-        <TwoSideHammer position={[0, -0.5, -6]} />
-        <OneSideKnife position={[0, -0.5, -12]} />
-        <TwoSideHammer position={[0, -0.5, -18]} />
-        <OneSideHammer position={[0, -0.5, -24]} rotation={[0, Math.PI, 0]} />
-        <OneSideHammer position={[0, -0.5, -30]} />
-        <UpDownRamp position={[0, -0.5, -36]} />
-        <OneSideKnife position={[0, -0.5, -54]} rotation={[0, Math.PI, 0]} />
-        <BallPins3 position={[0, -0.5, -60]} />
-        <BallPins6 position={[0, -0.5, -66]} />
-        <EndBlock position={[0, -0.5, -72]} />
+        {blocks.map((Block, index) => (
+          <Block
+            key={index}
+            position={[0, -0.5, -(index + 1) * 6]}
+            rotation={[0, Math.PI / 180, 0]}
+          />
+        ))}
+        <EndBlock position={[0, -0.5, -(count + 1) * 6]} />
       </group>
     </>
   );
